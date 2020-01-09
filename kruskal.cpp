@@ -2,7 +2,7 @@
 
 /*
     making graph: we will make adjecency matrix of cost
-    
+
 */
 
 #include <bits/stdc++.h>
@@ -98,5 +98,4 @@ int main(){
     loop(ans.end()-ans.begin()){
         cout << ans[i][0] << "\t\t" << ans[i][1] << "\t\t" << ans[i][2] << endl;
     }
-
 }
