@@ -17,6 +17,8 @@ using namespace std;
 #define deb2(x, y) cout << #x << " " << x << " " << #y << " " << y << endl
 #define loop(n) for(int i = 0; i < n; i++)
 #define pb push_back
+int dustbin;
+
 
 vector<vin> heap(100, vin(3, INT_MAX));
 int heap_size = 1;
@@ -38,19 +40,21 @@ void insert(vin edge){
     heap_size++;
 }
 
-vin del(){
+vin _delete(){
 
     vin ans = heap[1];
+    heap[1] = heap[heap_size];
     int temp = 1;
-    while (temp < heap_size){
-        if  (heap[2*temp][2] < heap[2*temp+1][2]) {
-            heap[temp] = heap[2*temp];
+    while(1){
+        if (heap[temp][2] > heap[2*temp][2]){
+            swap(heap[temp], heap[2*temp]);
             temp = 2*temp;
         }
-        else {
-            heap[temp] = heap[2*temp+1];
+        else if (heap[temp][2] > heap[2*temp+1][2]){
+            swap(heap[temp], heap[2*temp+1]);
             temp = 2*temp+1;
         }
+        else break;
     }
     heap_size--;
     return ans;
@@ -84,43 +88,35 @@ int main(){
     int start;
     cout << "Enter starting virtex" << endl;
     cin >> start;
-
+ 
     selected[start] = true;
-
+ 
     for (int i = 1; i <= n; i++){
         if (matrix[start][i] != INT_MAX){
             vin temp = {start, i, matrix[start][i]};
             insert(temp);
-            selected[i] = true;
-            matrix[i][start] = INT_MAX;
         }
     }
-
+    
     int taken = 0;
     vector<vin> answer;
-
-    while (taken < 8){
+    while (taken < 7){
         vin temp(3);
-        cout << "before" << endl;
-        for (int i = 1; i < heap_size; i++) cout << heap[i][0] << " " << heap[i][1] << " " << heap[i][2] << endl;
-        temp = del();
-        cout << "after" << endl;
-        for (int i = 1; i < heap_size; i++) cout << heap[i][0] << " " << heap[i][1] << " " << heap[i][2] << endl;
-        if (!(selected[temp[0] == true && selected[temp[1] == true]])){
+        temp = _delete();
+
+        if (!( selected[temp[0]] == true && selected[temp[1]] == true )){
             answer.pb(temp);
             taken++;
             int new_vtx = !selected[temp[0]] ? temp[0] : temp[1];
- 
+            selected[new_vtx] = true;
             for (int i = 1; i <= n; i++){
                 if (matrix[new_vtx][i] != INT_MAX){
                     vin temp = {new_vtx, i, matrix[new_vtx][i]};
                     insert(temp);
-                    selected[i] = true;
-                    matrix[i][new_vtx] = INT_MAX;
                 }       
             }
-            for (int i = 1; i < heap_size; i++) cout << heap[i][0] << " " << heap[i][1] << " " << heap[i][2] << endl;
-            exit(0);
         }
     }
+
+    for(auto k : answer) cout << k[0] << " " << k[1] << " " << k[2] << endl;
 }
