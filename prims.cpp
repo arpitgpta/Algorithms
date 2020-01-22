@@ -17,7 +17,6 @@
 #define fastio ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL); cerr.tie(NULL)
 #define endl '\n'
 #define ll long long int
-using namespace std;
 #define pii pair <ll , ll >
 #define vin vector<int>
 #define vll vector<long long>
@@ -25,6 +24,7 @@ using namespace std;
 #define deb2(x, y) cout << #x << " " << x << " " << #y << " " << y << endl
 #define loop(n) for(int i = 0; i < n; i++)
 #define pb push_back
+using namespace std;
 int dustbin;
 
 
@@ -47,11 +47,9 @@ void pre_processing(){
     adj_matrix[6][7] = 5;
     adj_matrix[7][8] = 2;
 
-    for (int i = 1; i <= n; i++){
-        for (int j = 1; j <= n; j++){
-            if (adj_matrix[j][i] != INT_MAX) adj_matrix[i][j] = adj_matrix[j][i];
-        }
-    }
+    for (int i = 1; i <= n; i++) for (int j = 1; j <= n; j++)
+        if (adj_matrix[j][i] != INT_MAX) adj_matrix[i][j] = adj_matrix[j][i];
+
 }
 
 
@@ -64,7 +62,7 @@ void insert(vin edge){
         int temp = heap[last/2][2];
         if (temp > edge[2]){
             heap[last] = heap[last/2];
-            last /= 2;
+            last >>= 1;
         }    
         else break;
     }
@@ -80,11 +78,11 @@ vin _delete(){
     while(1){
         if (heap[temp][2] > heap[2*temp][2]){
             swap(heap[temp], heap[2*temp]);
-            temp = 2*temp;
+            temp <<= 1;
         }
         else if (heap[temp][2] > heap[2*temp+1][2]){
             swap(heap[temp], heap[2*temp+1]);
-            temp = 2*temp+1;
+            temp = temp*2 + 1;
         }
         else break;
     }
@@ -118,6 +116,8 @@ int main(){
         //  3.
         vin temp(3);
         temp = _delete();
+        // deb2(temp[0], temp[1]);
+        // cin >> dustbin;
 
         if (!( selected[temp[0]] == true && selected[temp[1]] == true )){
             // 4. 
@@ -135,4 +135,5 @@ int main(){
     }
     // printing answer
     for(auto k : answer) cout << k[0] << " " << k[1] << " " << k[2] << endl;
+
 }
