@@ -91,6 +91,8 @@ vin _delete(){
 }
 
 int main(){
+
+    // fastio;
     pre_processing();
 
     // 1.
